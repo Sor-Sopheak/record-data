@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="km">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title></title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
+  <script defer src="strings.js"></script>
+  <script defer src="app.js"></script>
+</head>
+
+<body>
+  <header>
+    <h1 data-s="title"></h1>
+
+    <div class="header-filters">
+      <input id="q" data-ph="search" oninput="render()">
+      <select id="f_cur_filter" class="short-filter" onchange="render()"></select>
+      <select id="f_met_filter" class="short-filter" onchange="render()"></select>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <aside>
+      <!-- ===== MODE TABS (above everything on the left) ===== -->
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-mode="income" onclick="setMode('income')">
+          <span data-s="tabIncome"></span>
+        </button>
+        <button class="tab" data-mode="expense" onclick="setMode('expense')">
+          <span data-s="tabExpense"></span>
+        </button>
+      </div>
+
+      <!-- ===== INCOME SIDE PANEL ===== -->
+      <div id="panelIncome">
+        <div class="card">
+          <h3 data-s="newSheet"></h3>
+          <p class="hint" data-s="newSheetDesc"></p>
+          <hr class="divider">
+          <div class="chips" id="presets"></div>
+          <div class="row"><input id="sn" data-ph="sheetName"></div>
+          <button class="p block" data-s="create" onclick="addSheet()"></button>
+        </div>
+
+        <div class="card">
+          <h3 data-s="sheets"></h3>
+          <div id="list"></div>
+          <hr class="divider">
+          <p class="hint" data-s="exportButtonOptions"></p>
+          <div class="row">
+            <button data-s="expCur" onclick="exportX('cur')"></button>
+            <button data-s="expSel" onclick="exportX('sel')"></button>
+            <button class="p" data-s="expAll" onclick="exportX('all')"></button>
+          </div>
+          <button class="block" data-s="expPDF" onclick="exportPDF()"></button>
+        </div>
+      </div>
+
+      <!-- ===== EXPENSE SIDE PANEL ===== -->
+      <div id="panelExpense" hidden>
+        <div class="card">
+          <h3 data-s="expNewSheet"></h3>
+          <p class="hint" data-s="expNewSheetDesc"></p>
+          <hr class="divider">
+          <div class="chips" id="presetsExp"></div>
+          <div class="row"><input id="snExp" data-ph="expSheetName"></div>
+          <button class="p block" data-s="expCreate" onclick="addSheet()"></button>
+        </div>
+
+        <div class="card">
+          <h3 data-s="expSheets"></h3>
+          <div id="listExp"></div>
+          <hr class="divider">
+          <p class="hint" data-s="exportButtonOptions"></p>
+          <div class="row">
+            <button data-s="expCur" onclick="exportX('cur')"></button>
+            <button data-s="expSel" onclick="exportX('sel')"></button>
+            <button class="p" data-s="expAll" onclick="exportX('all')"></button>
+          </div>
+          <button class="block" data-s="expPDF" onclick="exportPDF()"></button>
+        </div>
+      </div>
+
+      <!-- backup (shared, always visible) -->
+      <div class="card">
+        <h3 data-s="backup"></h3>
+        <div class="actions-full">
+          <button data-s="saveJson" onclick="backup()"></button>
+          <button data-s="restoreJson" onclick="$('rf').click()"></button>
+        </div>
+        <input id="rf" type="file" accept=".json" hidden onchange="restore(this)">
+      </div>
+    </aside>
+    <main id="main"></main>
+  </div>
+
+  <div id="appModal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-icon" id="modalIcon">!</div>
+        <h3 class="modal-title" id="modalTitle"></h3>
+      </div>
+      <div class="modal-body" id="modalMsg"></div>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+  </div>
+  <div id="cal"></div>
+</body>
+
+</html>
